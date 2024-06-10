@@ -15,33 +15,33 @@ A credit card is one of the most used financial products to make online purchase
 9>from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score, roc_curve
 10>from sklearn.ensemble import IsolationForest
 
-#load the data into pandas dataframe
+# load the data into pandas dataframe
 
 credit_fraud_data = pd.read_csv('C:/Users/rohan/Downloads/creditcard.csv')
 credit_fraud_data
 
-#validate the shape of the data 
+# validate the shape of the data 
 credit_fraud_data.shape
 
-#check for datatypes of colums
+# check for datatypes of colums
 credit_fraud_data.info()
 
-#lets veriefy missing vallues 
+# lets veriefy missing vallues 
 credit_fraud_data.isnull().sum()
 
-#using this code we can see last 9 rows of data 
+# using this code we can see last 9 rows of data 
 credit_fraud_data.tail(9)
 
-#Checking the count of the missing values percentage, there are very few missing values there in the dataset
+# Checking the count of the missing values percentage, there are very few missing values there in the dataset
 credit_fraud_data.isnull().sum()/len(credit_fraud_data)*100
 
-#The below command will help us understand the total number of columns present in the dataset
+# The below command will help us understand the total number of columns present in the dataset
 len(credit_fraud_data.columns)
 
-#transpose if a nice way of discribing the data ,we just need to do a,T after the dataframe and transpose show you stetistical terms above  as column
+# transpose if a nice way of discribing the data ,we just need to do a,T after the dataframe and transpose show you stetistical terms above  as column
 credit_fraud_data.describe().T
 
-#lets we check how many columns are in the dataset.
+# lets we check how many columns are in the dataset.
 credit_fraud_data.columns
 
 # Check for duplicate records
@@ -51,14 +51,13 @@ print('Number of duplicate records:', duplicate_rows)
 # Display the distribution of legitimate transactions and fraudulent transactions
 print(credit_fraud_data['Class'].value_counts())
 
-#get fraud and normal dataset.
+# get fraud and normal dataset.
 
 fraud = credit_fraud_data[credit_fraud_data["Class"]== 1]
 normal = credit_fraud_data[credit_fraud_data["Class"]== 0]
-
 print(fraud.shape,normal.shape)
 
-#Box plots for 'Amount' and 'Time' by Class
+# Box plots for 'Amount' and 'Time' by Class
 plt.figure(figsize=(12, 6))
 sns.boxplot(x='Class', y='Amount', data=credit_fraud_data, showfliers=False,)
 plt.title('Box Plot of Transaction Amount by Class')
@@ -70,7 +69,7 @@ sns.barplot(data=credit_fraud_data, y = 'Time',x='Class')
 plt.title('Box Plot of Transaction Time by Class')
 plt.show()
 
-#Checking for class distribution¶
+# Checking for class distribution¶
 sns.countplot(x="Class",data=credit_fraud_data)
 plt.title('Distribution of Frauds(0: No Fraud || 1: Fraud')
 
@@ -183,7 +182,7 @@ print('Random Forest Test AUC:', rf_test_auc)
 print('\nClassification Report (Logistic Regression):\n', classification_report(Y_test, X_test_prediction_logistic))
 print('\nConfusion Matrix (Logistic Regression):\n', confusion_matrix(Y_test, X_test_prediction_logistic))
 
-#Using F1 Score we are checking the accuracy on the testing dataset of random forest,
+# Using F1 Score we are checking the accuracy on the testing dataset of random forest,
 
 print('\nClassification Report (Random Forest):\n', classification_report(Y_test, rf_model.predict(X_test)))
 print('\nConfusion Matrix (Random Forest):\n', confusion_matrix(Y_test, rf_model.predict(X_test)))
