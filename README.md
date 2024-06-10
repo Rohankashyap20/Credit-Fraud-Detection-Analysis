@@ -104,94 +104,11 @@ plt.figure(figsize=(15,10))
 sns.heatmap(credit_fraud_data.corr(), annot= True, fmt='.1f', cmap='coolwarm_r')
 plt.show()
 
-                                           # Data Cleaning and Preprocessing
-
 # Handling outliers using Isolation Forest for 'Amount' and 'Time'
 outlier_detector = IsolationForest(contamination=0.01, random_state=1)
 credit_fraud_data['Outlier'] = outlier_detector.fit_predict(credit_fraud_data[['Amount', 'Time']])
 credit_fraud_data = credit_fraud_data[credit_fraud_data['Outlier'] == 1].drop(columns='Outlier')
 
-# Scaling 'Amount' using StandardScaler
-scaler = StandardScaler()
-credit_fraud_data['Amount'] = scaler.fit_transform(credit_fraud_data[['Amount']])
-
-# Under-sampling
-Legit = credit_fraud_data[credit_fraud_data['Class'] == 0]
-fraud = credit_fraud_data[credit_fraud_data['Class'] == 1]
-Legit_sample = Legit.sample(n=492)
-new_dataset = pd.concat([Legit_sample, fraud], axis=0)
-
-# Split the data into features and targets
-X = new_dataset.drop(columns='Class', axis=1)
-Y = new_dataset['Class']
-
-# Split the data into Training data and testing data
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, stratify=Y, random_state=2)
-
-                                                      # Model Selection
-
-# Model training: Logistic Regression
-logistic_model = LogisticRegression(random_state=2, max_iter=10000, solver='lbfgs')  # Increase max_iter and specify solver
-
-# Hyperparameter Tuning using GridSearchCV
-param_grid = {'C': [0.001, 0.01, 0.1, 1, 10, 100]}
-grid_search = GridSearchCV(LogisticRegression(random_state=2, max_iter=10000, solver='lbfgs'), param_grid, cv=5)
-grid_search.fit(X_train, Y_train)
-
-# Get the best hyperparameter
-best_C = grid_search.best_params_['C']
 
 
-# Model Training with the best hyperparameter
-logistic_model = LogisticRegression(C=best_C, random_state=2, max_iter=10000, solver='lbfgs')  # Increase max_iter and specify solver
-logistic_model.fit(X_train, Y_train)
 
-# Cross-Validation
-cross_val_scores = cross_val_score(logistic_model, X_train, Y_train, cv=5, scoring='accuracy')
-print('Cross-Validation Scores:', cross_val_scores)
-
-# Model Evaluation
-
-# Accuracy score on training data for Logistic Regression
-X_train_prediction_logistic = logistic_model.predict(X_train)
-training_data_accuracy_logistic = accuracy_score(X_train_prediction_logistic, Y_train)
-print('Logistic Regression Training data accuracy:', training_data_accuracy_logistic)
-
-# Accuracy score on test data for Logistic Regression
-X_test_prediction_logistic = logistic_model.predict(X_test)
-test_data_accuracy_logistic = accuracy_score(X_test_prediction_logistic, Y_test)
-print('Logistic Regression Test data accuracy:', test_data_accuracy_logistic)
-
-# Additional Model Evaluation Metrics for Logistic Regression
-logistic_train_auc = roc_auc_score(Y_train, logistic_model.predict_proba(X_train)[:, 1])
-logistic_test_auc = roc_auc_score(Y_test, logistic_model.predict_proba(X_test)[:, 1])
-print('Logistic Regression Train AUC:', logistic_train_auc)
-print('Logistic Regression Test AUC:', logistic_test_auc)
-
-# Model Comparison (Random Forest as an alternative)
-rf_model = RandomForestClassifier(random_state=2)
-rf_model.fit(X_train, Y_train)
-
-# Additional Model Evaluation Metrics for Random Forest
-rf_train_auc = roc_auc_score(Y_train, rf_model.predict_proba(X_train)[:, 1])
-rf_test_auc = roc_auc_score(Y_test, rf_model.predict_proba(X_test)[:, 1])
-print('Random Forest Train AUC:', rf_train_auc)
-print('Random Forest Test AUC:', rf_test_auc)
-
-#Using F1 Score we are checking the accuracy on the testing dataset of logistic regression.
-print('\nClassification Report (Logistic Regression):\n', classification_report(Y_test, X_test_prediction_logistic))
-print('\nConfusion Matrix (Logistic Regression):\n', confusion_matrix(Y_test, X_test_prediction_logistic))
-
-# Using F1 Score we are checking the accuracy on the testing dataset of random forest,
-
-print('\nClassification Report (Random Forest):\n', classification_report(Y_test, rf_model.predict(X_test)))
-print('\nConfusion Matrix (Random Forest):\n', confusion_matrix(Y_test, rf_model.predict(X_test)))
-
-# Model Interpretability
-
-# Logistic Regression coefficients
-feature_names = X.columns
-coefficients = logistic_model.coef_[0]
-feature_importance_logistic = pd.DataFrame({'Feature': feature_names, 'Coefficient': coefficients})
-feature_importance_logistic = feature_importance_logistic.sort_values(by='Coefficient', ascending=False)
-print('\nLogistic Regression Coefficients:\n', feature_importance_logistic)
