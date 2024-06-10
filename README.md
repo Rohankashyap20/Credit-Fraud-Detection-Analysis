@@ -4,13 +4,13 @@ A credit card is one of the most used financial products to make online purchase
 
 #import important libraris
 
-import numpy as np
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score, roc_curve
-from sklearn.ensemble import IsolationForest
+1>import numpy as np
+2>import pandas as pd
+3>import seaborn as sns
+4>import matplotlib.pyplot as plt
+5>from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
+6>from sklearn.linear_model import LogisticRegression
+7>from sklearn.ensemble import RandomForestClassifier
+8>from sklearn.preprocessing import StandardScaler
+9>from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score, roc_curve
+10>from sklearn.ensemble import IsolationForest
